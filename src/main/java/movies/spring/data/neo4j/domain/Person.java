@@ -4,14 +4,14 @@ package movies.spring.data.neo4j.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
 /**
- * @author Mark Angrish
+ * @author Alex Yoon
+ * @author Tae Kim
  */
 @NodeEntity
 public class Person {
@@ -20,17 +20,15 @@ public class Person {
     @GeneratedValue
 	private Long id;
 	private String name;
-	private int born;
 
-	@Relationship(type = "ACTED_IN")
-	private List<Movie> movies = new ArrayList<>();
+	@Relationship(type = "WORKED", direction = Relationship.OUTGOING)
+	private List<Worked> worked = new ArrayList<>();
 
 	public Person() {
 	}
 
-	public Person(String name, int born) {
+	public Person(String name) {
 		this.name = name;
-		this.born = born;
 	}
 
 	public Long getId() {
@@ -41,11 +39,10 @@ public class Person {
 		return name;
 	}
 
-	public int getBorn() {
-		return born;
-	}
-
-	public List<Movie> getMovies() {
-		return movies;
+	public void addWorked(Worked worked) {
+		if (this.worked == null) {
+			this.worked = new ArrayList<>();
+		}
+		this.worked.add(worked);
 	}
 }

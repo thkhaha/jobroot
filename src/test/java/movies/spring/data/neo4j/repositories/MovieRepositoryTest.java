@@ -36,7 +36,7 @@ public class MovieRepositoryTest {
 
 		movieRepository.save(matrix);
 
-		Person keanu = new Person("Keanu Reeves", 1964);
+		Person keanu = new Person("Keanu Reeves");
 
 		personRepository.save(keanu);
 
