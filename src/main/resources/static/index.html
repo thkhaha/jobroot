@@ -87,7 +87,7 @@
 </style>
 
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="http://d3js.org/d3.v3.min.js" type="text/javascript"></script>
+<script src="https://d3js.org/d3.v3.min.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(function () {
         function showMovie(title) {
@@ -189,6 +189,8 @@
 
 <script type="text/javascript">
     var width = 800, height = 800;
+    
+    console.log(d3);
 
     var force = d3.layout.force()
             .charge(-200).linkDistance(30).size([width, height]);
