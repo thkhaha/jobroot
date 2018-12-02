@@ -8,8 +8,6 @@ import org.neo4j.ogm.annotation.*;
  */
 @RelationshipEntity(type = "WORKED")
 public class Worked {
-    @Id
-    @GeneratedValue
 	private Long id;
 	private int yearsOfExp;
 	private int jobOrder;
@@ -23,7 +21,8 @@ public class Worked {
 	public Worked() {
 	}
 
-	public Worked(Position position, Person person) {
+	public Worked(Long id, Position position, Person person) {
+		this.id = id;
 		this.position = position;
 		this.person = person;
 	}

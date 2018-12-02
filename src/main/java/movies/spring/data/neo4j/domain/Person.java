@@ -16,9 +16,7 @@ import org.neo4j.ogm.annotation.Relationship;
 @NodeEntity
 public class Person {
 
-    @Id
-    @GeneratedValue
-	private Long id;
+	private int id;
 	private String name;
 
 	@Relationship(type = "WORKED", direction = Relationship.OUTGOING)
@@ -27,11 +25,12 @@ public class Person {
 	public Person() {
 	}
 
-	public Person(String name) {
+	public Person(int id, String name) {
+		this.id = id;
 		this.name = name;
 	}
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 

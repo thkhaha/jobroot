@@ -6,10 +6,8 @@ import org.neo4j.ogm.annotation.*;
  * @author Alex Yoon
  * @author Tae Kim
  */
-@RelationshipEntity(type = "PATH")
+@RelationshipEntity(type = "Path")
 public class Path {
-    @Id
-    @GeneratedValue
 	private long id;
 	private int avgYear;
 	private int avgSalaryBump;
@@ -23,7 +21,8 @@ public class Path {
 	public Path() {
 	}
 
-	public Path(Position startPosition, Position endPosition) {
+	public Path(Long id, Position startPosition, Position endPosition) {
+		this.id = id;
 		this.startPosition = startPosition;
 		this.endPosition = endPosition;
 	}

@@ -12,13 +12,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * @author Alex Yoon
  * @author Tae Kim
  */
-@RepositoryRestResource(collectionResourceRel = "positions", path = "positions")
+
+@RepositoryRestResource(collectionResourceRel = "movies", path = "movies")
 public interface PositionRepository extends Neo4jRepository<Position, Long> {
 
-	Position findByName(@Param("name") String name);
-
-	Collection<Position> findByLongName(@Param("longName") String longName);
-
-    @Query("MATCH (m:Movie)<-[r:ACTED_IN]-(a:Person) RETURN m,r,a LIMIT {limit}")
-	Collection<Position> graph(@Param("limit") int limit);
+	@Query("MATCH path=(po:Position {name:'SDE-I'})-[pa:Path*1..20]->(po2:Position {name:'SDM-III'}) RETURN nodes(path), rels(path)")
+	Collection<Position> findPath(@Param("startPosition") String startPosition, @Param("endPosition") String endPosition, @Param("limit") int limit);
 }

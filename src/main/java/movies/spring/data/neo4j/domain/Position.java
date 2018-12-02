@@ -16,27 +16,25 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @NodeEntity
 public class Position {
-
-	@Id
-	@GeneratedValue
 	private int id;
 	private String name;
 	private String longName;
 	private long avgSalary;
 	private int count;
 	
-	@JsonIgnoreProperties("position")
-	@Relationship(type = "WORKED", direction = Relationship.INCOMING)
-	private List<Worked> worked;
+	//@JsonIgnoreProperties("position")
+	//@Relationship(type = "WORKED", direction = Relationship.INCOMING)
+	//private List<Worked> worked;
 
 	@JsonIgnoreProperties("position")
-	@Relationship(type = "PATH", direction = Relationship.UNDIRECTED)
-	private List<Path> path;
+	@Relationship(type = "Path")
+	private List<Path> paths;
 
 	public Position() {
 	}
 
-	public Position(String name, String longName, long avgSalary, int count) {
+	public Position(int id, String name, String longName, long avgSalary, int count) {
+		this.id = id;
 		this.name = name;
 		this.longName = longName;
 		this.avgSalary = avgSalary;
@@ -63,10 +61,14 @@ public class Position {
 		return count;
 	}
 
+	public List<Path> getPaths() {
+		return paths;
+	}
+
 	public void addPath(Path path) {
-		if (this.path == null) {
-			this.path = new ArrayList<>();
+		if (this.paths == null) {
+			this.paths = new ArrayList<>();
 		}
-		this.path.add(path);
+		this.paths.add(path);
 	}
 }
