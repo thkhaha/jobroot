@@ -16,7 +16,10 @@
                     <li>
                         <form role="search" class="navbar-form" id="search">
                             <div class="form-group">
-                                <input type="text" value="Matrix" placeholder="Search for Movie Title" class="form-control" name="search">
+                                <input type="text" value="Tom Hanks" placeholder="Search for Movie Title" class="form-control" name="start">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" value="Tom Hanks" placeholder="Search for Movie Title" class="form-control" name="end">
                             </div>
                             <button class="btn btn-default" type="submit">Search</button>
                         </form>
@@ -37,7 +40,7 @@
     </div>
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-5">
         <div class="panel panel-default">
             <div class="panel-heading">Search Results</div>
@@ -69,11 +72,17 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
+
 <style type="text/css">
-    .node { stroke: #222; stroke-width: 1.5px; }
+    .node { stroke: #222; stroke-width: 1.0px; } 
     .node.actor { fill: #888; }
     .node.movie { fill: #BBB; }
+    .node text {
+	  pointer-events: none;
+	  font: 10px sans-serif;
+	  font-weight: 100;
+	}
     .link { stroke: #999; stroke-opacity: .6; stroke-width: 1px; }
 </style>
 
@@ -114,9 +123,67 @@
                     }, "json");
             return false;
         }
+        
+        function findPath() {
+        	var query=$("#search").find("input[name=start]").val();
+        	
+        	console.log(force);
+            console.log(svg);
+            
+            d3.json("/graph?name="+query, function(error, graph) {
+                if (error) return;
+                
+                svg.selectAll(".link").remove();
+                svg.selectAll(".node").remove();
+                
+                force.nodes(graph.nodes).links(graph.links).start();
 
-        $("#search").submit(search);
-        search();
+                console.log(graph);
+
+                var link = svg.selectAll(".link")
+                        .data(graph.links).enter()
+                        .append("line").attr("class", "link");
+
+                var node = svg.selectAll(".node")
+				        .data(graph.nodes)
+				        .enter().append("g")
+		      			.attr("class", "node")
+		      			.call(force.drag);
+            
+                node.append("circle")
+    			.attr("r", 10)
+            	.attr("class", function (d) { return "node "+d.label });
+            
+
+                // html title attribute
+                node.append("title")
+                        .text(function (d) { return d.title; })
+                        
+                node.append("text")
+				        .attr("dx", 12)
+				        .attr("dy", ".35em")
+				        .text(function(d) { return d.title }); 
+
+                // force feed algo ticks
+                force.on("tick", function() {
+                    link.attr("x1", function(d) { return d.source.x; })
+                            .attr("y1", function(d) { return d.source.y; })
+                            .attr("x2", function(d) { return d.target.x; })
+                            .attr("y2", function(d) { return d.target.y; });
+
+                    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+                });
+                
+                console.log(svg);
+                
+            });
+            
+
+        	return false;
+        }
+
+        $("#search").submit(findPath);
+        //search();
     })
 </script>
 
@@ -140,15 +207,23 @@
                 .append("line").attr("class", "link");
 
         var node = svg.selectAll(".node")
-                .data(graph.nodes).enter()
-                .append("circle")
-                .attr("class", function (d) { return "node "+d.label })
-                .attr("r", 10)
-                .call(force.drag);
-
+		        .data(graph.nodes)
+		        .enter().append("g")
+      			.attr("class", "node")
+      			.call(force.drag);
+        
+        node.append("circle")
+			.attr("r", 10)
+        	.attr("class", function (d) { return "node "+d.label });
+        
         // html title attribute
         node.append("title")
-                .text(function (d) { return d.title; })
+                .text(function (d) { return d.title; }); 
+                
+        node.append("text")
+		        .attr("dx", 12)
+		        .attr("dy", ".35em")
+		        .text(function(d) { return d.title });
 
         // force feed algo ticks
         force.on("tick", function() {
@@ -157,8 +232,7 @@
                     .attr("x2", function(d) { return d.target.x; })
                     .attr("y2", function(d) { return d.target.y; });
 
-            node.attr("cx", function(d) { return d.x; })
-                    .attr("cy", function(d) { return d.y; });
+            node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
         });
     });
 </script>

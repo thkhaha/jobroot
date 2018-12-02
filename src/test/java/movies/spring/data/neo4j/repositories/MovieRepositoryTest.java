@@ -76,7 +76,7 @@ public class MovieRepositoryTest {
 	 */
 	@Test
 	public void testGraph() {
-		Collection<Movie> graph = movieRepository.graph(5);
+		Collection<Movie> graph = movieRepository.graph("Tom Hanks");
 
 		assertEquals(1, graph.size());
 

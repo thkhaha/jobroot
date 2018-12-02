@@ -26,7 +26,7 @@ public class MovieController {
 	}
 
     @GetMapping("/graph")
-	public Map<String, Object> graph(@RequestParam(value = "limit",required = false) Integer limit) {
-		return movieService.graph(limit == null ? 100 : limit);
+	public Map<String, Object> graph(@RequestParam(value = "name",required = false) String name) {
+		return movieService.graph(name == null ? "Tom Hanks" : name);
 	}
 }
