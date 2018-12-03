@@ -58,7 +58,9 @@ public class PositionService {
             for(String position : positionPath) {
                 i++;
                 nodes.add(map("Position", position, "label", "position"));
-                rels.add(map("source", source,"target", i));
+                if(positionPath.size() > i) {
+                    rels.add(linkMap("source", source,"target", i, "weight", 1));
+                }
                 source=i;
             }
         }
@@ -69,6 +71,14 @@ public class PositionService {
 		Map<String, Object> result = new HashMap<String, Object>(2);
 		result.put(key1, value1);
 		result.put(key2, value2);
+		return result;
+	}
+	
+	private Map<String, Object> linkMap(String key1, Object value1, String key2, Object value2, String key3, Object value3) {
+		Map<String, Object> result = new HashMap<String, Object>(2);
+		result.put(key1, value1);
+		result.put(key2, value2);
+		result.put(key3, value3);
 		return result;
 	}
 }
