@@ -1,4 +1,4 @@
-Movies Example Application
+Notes
 ==========================
 
 How to use Spring Boot, Spring Data, and Neo4j together.
@@ -41,11 +41,11 @@ include::pom.xml[tags=dependencies]
 
 Annotate your `@NodeEntity` and `@RelationshipEntity`. You can use the OGM `Session` to access Neo4j APIs and object graph mapping functionality.
 
-.Movie.java
+.Position.java
 [source,java]
 ----
 @NodeEntity
-public class Movie {
+public class Position {
 
     @Id
     @GeneratedValue
@@ -61,29 +61,29 @@ public class Movie {
     private List<Role> roles;
 }
 ----
-include::src/main/java/movies/spring/data/neo4j/domain/Movie.java[tags=movie]
+include::src/main/java/movies/spring/data/neo4j/domain/Position.java[tags=movie]
 
 Additionally, you can leverage the convenient Spring-Data repositories to get interface-based DAO implementations injected into your Spring Components.
 
-.MovieRepository.java
+.Repository.java
 [source,java]
 ----
-public interface MovieRepository extends Neo4jRepository<Movie, Long> {
+public interface PositionRepository extends Neo4jRepository<Position, Long> {
 
-    Movie findByTitle(@Param("title") String title);
+    Position findByTitle(@Param("title") String title);
 
-    Collection<Movie> findByTitleLike(@Param("title") String title);
+    Collection<Position> findByTitleLike(@Param("title") String title);
 
-    @Query("MATCH (m:Movie)<-[r:ACTED_IN]-(a:Person) RETURN m,r,a LIMIT {limit}")
-    Collection<Movie> graph(@Param("limit") int limit);
+    @Query("MATCH (m:Position)<-[r:ACTED_IN]-(a:Person) RETURN m,r,a LIMIT {limit}")
+    Collection<Position> graph(@Param("limit") int limit);
 }
 ----
-include::src/main/java/movies/spring/data/neo4j/repositories/MovieRepository.java[tags=repository]
+include::src/main/java/movies/spring/data/neo4j/repositories/PositionRepository.java[tags=repository]
 
-In our case, we use the repository from a `MovieService` to compute the graph representation for the visualization.
+In our case, we use the repository from a `PositionService` to compute the graph representation for the visualization.
 The service is then injected into our main Boot application, which also doubles as `@RestMvcController` which exposes the `/graph` endpoint.
 
-The other two endpoints for finding multiple movies by title and loading a single movie are provided out of the box by the https://projects.spring.io/spring-data-rest/[Spring-Data-Rest project], which exposes our `MovieRepository` as REST endpoints.
+The other two endpoints for finding multiple movies by title and loading a single movie are provided out of the box by the https://projects.spring.io/spring-data-rest/[Spring-Data-Rest project], which exposes our `PositionRepository` as REST endpoints.
 
 The rendering of the movie objects (and related entities) happens automatically via Jackson mapping.
 
@@ -99,7 +99,7 @@ These are the components of our Web Application:
 
 == Endpoints:
 
-Get Movie
+Get Position
 
 To run our setup queries through our REST endpoints:
 
@@ -110,11 +110,6 @@ You can also go to http://localhost:8080 to interact with the data.
 Now feel free to add other queries to your application to see more data and relationships!
 
 ----
-// JSON object for single movie with cast
-curl http://localhost:8080/movie?title=The%20Matrix
-
-// list of JSON objects for movie search results
-curl http://localhost:8080/movies?title=*matrix*
 
 // JSON object for whole graph viz (nodes, links - arrays)
 curl http://localhost:8080/graph
